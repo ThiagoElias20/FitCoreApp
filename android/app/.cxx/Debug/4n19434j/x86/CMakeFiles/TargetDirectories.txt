@@ -1,0 +1,2 @@
+/home/thiago/Desktop/FitCoreApp/android/app/.cxx/Debug/4n19434j/x86/CMakeFiles/edit_cache.dir
+/home/thiago/Desktop/FitCoreApp/android/app/.cxx/Debug/4n19434j/x86/CMakeFiles/rebuild_cache.dir
