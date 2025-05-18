@@ -34,57 +34,105 @@ class _GymSheetState extends State<GymSheet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Gym Sheet'), actions: <Widget>[
-        IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FoodRegistration()),
-            );
-          },
-          icon: const Icon(Icons.restaurant),
-          tooltip: "Registro de alimentos",
-        )
-      ]),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // Centraliza horizontalmente
-          crossAxisAlignment: CrossAxisAlignment.center,
-          // Centraliza verticalmente
+        appBar: AppBar(title: Text('Gym Sheet'), actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FoodRegistration()),
+              );
+            },
+            icon: const Icon(Icons.restaurant),
+            tooltip: "Registro de alimentos",
+          )
+        ]),
+        body: Column(
           children: [
             Container(
-              width: 150,
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Exercício',
-                ),
+              alignment: Alignment.center,
+              child: SizedBox(
+                height: 25.0, // Altura do container
+                width: 300.0,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 7,
+                    itemBuilder: (context, index) {
+                      final days = [
+                        'Monday',
+                        'Tuesday',
+                        'Wednesday',
+                        'Thursday',
+                        'Friday',
+                        'Saturday',
+                        'Sunday'
+                      ];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Container(
+                            width: 25.0,
+                            height: 25.0,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: Text(
+                              days[index][0].toUpperCase(),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            )),
+                      );
+                    }),
               ),
             ),
-            Container(
-              width: 100,
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Peso (kg)',
-                ),
-              ),
-            ),
-            Container(
-              width: 50,
-              child: Checkbox(
-                value: isChecked,
-                onChanged: (bool? newVal) {
-                  print('Opa trocou para: $newVal');
+            SizedBox(height: 30.0), // Espaçamento entre os elementos
+            // Lista de exercícios
+            Expanded(
+              child: ListView.builder(
+                itemCount: 5, // Número de exercícios (pode ser dinâmico)
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 150,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Exercício',
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 100,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Peso (kg)',
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 50,
+                            child: Checkbox(
+                              value: isChecked,
+                              onChanged: (bool? newVal) {
+                                print('Opa trocou para: $newVal');
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16.0),
+                    ],
+                  );
                 },
               ),
             ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 
 // @override
