@@ -115,7 +115,7 @@ class _FoodRegistrationState extends State<FoodRegistration> {
                       controller: _nomeController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Nome',
+                        labelText: 'Nomeasdsadsad',
                       ),
                     ),
                   ),
