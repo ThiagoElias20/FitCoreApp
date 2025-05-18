@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_core_app/pages/food_registration.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GymSheet extends StatefulWidget {
   @override
@@ -7,29 +8,37 @@ class GymSheet extends StatefulWidget {
 }
 
 class _GymSheetState extends State<GymSheet> {
-  // final TextEditingController nameController = TextEditingController();
-  // final TextEditingController emailController = TextEditingController();
   bool isChecked = false;
+  List<Map<String, dynamic>> mondayExercises = [];
 
-//   void handleSubmit() {
-//     String name = nameController.text;
-//     String email = emailController.text;
-//     String checkboxStatus = isChecked ? "Checked" : "Unchecked";
-//
-//     showDialog(
-//       context: context,
-//       builder: (context) => AlertDialog(
-//         title: Text("Form Submitted"),
-//         content: Text("Name: $name\nEmail: $email\nCheckbox: $checkboxStatus"),
-//         actions: [
-//           TextButton(
-//             onPressed: () => Navigator.of(context).pop(),
-//             child: Text("OK"),
-//           ),
-//         ],
-//       ),
-//     );
-// }
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  Future<void> _fetchExercises() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('workout_plan')
+          .doc('SQNUCH8pSsegocHs4zqK')
+          .collection('weekly_plan')
+          .doc('monday')
+          .get();
+
+      setState(() {
+        final data = snapshot.data();
+        if (data != null) {
+          mondayExercises = mondayExercises = (data['exercises'] as List)
+              .map((e) => e as Map<String, dynamic>)
+              .toList();
+        }
+        print('Exercícios de segunda-feira: $mondayExercises');
+      });
+    } catch (err) {
+      print('Error fetching exercises: $err');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
