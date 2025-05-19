@@ -14,7 +14,7 @@ class _GymSheetState extends State<GymSheet> {
   @override
   void initState() {
     super.initState();
-
+    _fetchExercises();
   }
 
   Future<void> _fetchExercises() async {
@@ -37,6 +37,17 @@ class _GymSheetState extends State<GymSheet> {
       });
     } catch (err) {
       print('Error fetching exercises: $err');
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchExerciseDetails(DocumentReference exerciseRef) async {
+    try {
+      final snapshot = await exerciseRef.get();
+      final exerciseData = snapshot.data() as Map<String, dynamic>;
+      return exerciseData;
+    } catch (err) {
+      print('Erro ao buscar os dados do exercício: $err');
+      throw err;
     }
   }
 
@@ -95,10 +106,20 @@ class _GymSheetState extends State<GymSheet> {
             ),
             SizedBox(height: 30.0), // Espaçamento entre os elementos
             // Lista de exercícios
-            Expanded(
-              child: ListView.builder(
-                itemCount: 5, // Número de exercícios (pode ser dinâmico)
-                itemBuilder: (context, index) {
+      Expanded(
+        child: ListView.builder(
+          itemCount: mondayExercises.length,
+          itemBuilder: (context, index) {
+            final exercise = mondayExercises[index];
+            return FutureBuilder<Map<String, dynamic>>(
+              future: fetchExerciseDetails(exercise['exercise_ref']),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // Mostra um indicador de carregamento
+                } else if (snapshot.hasError) {
+                  return Text('Erro ao carregar exercício');
+                } else if (snapshot.hasData) {
+                  final exDetails = snapshot.data!;
                   return Column(
                     children: [
                       Row(
@@ -110,7 +131,7 @@ class _GymSheetState extends State<GymSheet> {
                             child: TextField(
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: 'Exercício',
+                                labelText: exDetails['name'], // Exibe o nome do exercício
                               ),
                             ),
                           ),
@@ -137,9 +158,14 @@ class _GymSheetState extends State<GymSheet> {
                       SizedBox(height: 16.0),
                     ],
                   );
-                },
-              ),
-            ),
+                } else {
+                  return Text('Nenhum dado encontrado');
+                }
+              },
+            );
+          },
+        ),
+      ),
           ],
         ));
   }
